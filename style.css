@@ -308,6 +308,9 @@ body::before {
 .link-btn:nth-child(3) { animation-delay: 0.26s; }
 .link-btn:nth-child(4) { animation-delay: 0.34s; }
 .link-btn:nth-child(5) { animation-delay: 0.42s; }
+.link-btn:nth-child(6) { animation-delay: 0.50s; }
+.link-btn:nth-child(7) { animation-delay: 0.58s; }
+.link-btn:nth-child(8) { animation-delay: 0.66s; }
 
 /* ─── Social Icons ─────────────────────────────────────────── */
 .socials {
