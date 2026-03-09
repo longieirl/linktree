@@ -1,0 +1,399 @@
+/* ─── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0a0a0a;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-hover: rgba(255, 255, 255, 0.35);
+  --text-primary: #f0ede8;
+  --text-secondary: #888880;
+  --text-muted: #555550;
+  --accent: #c9a96e;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+
+  /* mobile-first sizing tokens */
+  --container-padding: 20px;
+  --container-top: 48px;
+  --avatar-size: 88px;
+  --name-size: 22px;
+  --bio-size: 13px;
+  --btn-padding-v: 15px;
+  --btn-padding-h: 18px;
+  --btn-font-size: 13px;
+  --links-gap: 11px;
+}
+
+/* ─── Tablet+ overrides ────────────────────────────────────── */
+@media (min-width: 480px) {
+  :root {
+    --container-padding: 24px;
+    --container-top: 64px;
+    --avatar-size: 96px;
+    --name-size: 26px;
+    --bio-size: 14px;
+    --btn-padding-v: 16px;
+    --btn-padding-h: 22px;
+    --btn-font-size: 13px;
+    --links-gap: 12px;
+  }
+}
+
+html {
+  height: 100%;
+  /* Prevent font scaling in landscape on iOS */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100%;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ─── Noise Texture Overlay ────────────────────────────────── */
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ─── Radial glow ──────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: -10vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(600px, 100vw);
+  height: min(600px, 100vw);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(201, 169, 110, 0.07) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Container ────────────────────────────────────────────── */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--container-top) var(--container-padding) 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* JS fade-in initial state */
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.container.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Profile ──────────────────────────────────────────────── */
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+  text-align: center;
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .profile { gap: 14px; margin-bottom: 40px; }
+}
+
+/* Avatar */
+.avatar-wrap {
+  position: relative;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  margin-bottom: 4px;
+}
+
+.avatar {
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  object-fit: cover;
+  display: block;
+  /* Prevent image drag on mobile */
+  -webkit-user-drag: none;
+}
+
+.avatar-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  animation: ring-pulse 3s ease-in-out infinite;
+  /* Don't let the ring expand the tap target */
+  pointer-events: none;
+}
+
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.8; transform: scale(1.03); }
+}
+
+/* Name */
+.name {
+  font-family: var(--font-display);
+  font-size: var(--name-size);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+/* Bio */
+.bio {
+  font-family: var(--font-body);
+  font-size: var(--bio-size);
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 300px;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Link Buttons ─────────────────────────────────────────── */
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--links-gap);
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+@media (min-width: 480px) {
+  .links { margin-bottom: 36px; }
+}
+
+.link-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: var(--btn-padding-v) var(--btn-padding-h);
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: var(--btn-font-size);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  /* Use min-height for comfortable tap targets on mobile (44px minimum) */
+  min-height: 52px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  /* Only animate on devices that support hover (non-touch) */
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+  /* Prevent text selection on tap */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.link-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, rgba(201,169,110,0.06), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Hover only on pointer devices (not touch) */
+@media (hover: hover) and (pointer: fine) {
+  .link-btn {
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease,
+      transform 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .link-btn:hover {
+    border-color: var(--border-hover);
+    background: var(--surface-hover);
+    transform: translateY(-2px) scale(1.005);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,169,110,0.1);
+    color: #fff;
+  }
+
+  .link-btn:hover::before { opacity: 1; }
+
+  .link-btn:hover .link-icon { opacity: 1; }
+
+  .link-btn:hover .link-arrow {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+}
+
+/* Active state works on all devices */
+.link-btn:active {
+  background: var(--surface-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(0.98);
+}
+
+.link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--accent);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.link-label {
+  flex: 1;
+  text-align: center;
+  /* offset left by icon width + gap so label is visually centred */
+  margin-right: 30px;
+}
+
+.link-arrow {
+  font-size: 14px;
+  color: var(--text-muted);
+  transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+  font-family: var(--font-body);
+}
+
+/* Stagger animation delays */
+.link-btn:nth-child(1) { animation-delay: 0.10s; }
+.link-btn:nth-child(2) { animation-delay: 0.18s; }
+.link-btn:nth-child(3) { animation-delay: 0.26s; }
+.link-btn:nth-child(4) { animation-delay: 0.34s; }
+.link-btn:nth-child(5) { animation-delay: 0.42s; }
+
+/* ─── Social Icons ─────────────────────────────────────────── */
+.socials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 480px) {
+  .socials { gap: 20px; margin-bottom: 48px; }
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px minimum tap target */
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.social-icon:active {
+  color: var(--text-primary);
+  background: var(--surface);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .social-icon {
+    transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  }
+  .social-icon:hover {
+    color: var(--text-primary);
+    transform: translateY(-3px);
+    background: var(--surface);
+  }
+}
+
+/* ─── Footer ───────────────────────────────────────────────── */
+.footer {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  text-align: center;
+}
+
+.footer::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+  margin: 0 auto 20px;
+}
+
+.heart {
+  color: var(--accent);
+  display: inline-block;
+  animation: heartbeat 2.4s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14%       { transform: scale(1.25); }
+  28%       { transform: scale(1); }
+  42%       { transform: scale(1.15); }
+  56%       { transform: scale(1); }
+}
+
+/* ─── Entrance animations ──────────────────────────────────── */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.container.visible .profile  { animation: slide-up 0.4s ease both; }
+.container.visible .link-btn { animation: slide-up 0.4s ease both; }
+.container.visible .socials  { animation: slide-up 0.4s ease 0.5s both; }
+.container.visible .footer   { animation: slide-up 0.4s ease 0.6s both; }
