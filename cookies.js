@@ -47,22 +47,19 @@
   }
 
   // ─── UI helpers ───────────────────────────────────────────────
-  function closeBanner() { banner.hidden = true; }
-  function closeModal()  { overlay.hidden = true; }
+  function closeBanner() { if (banner.open) banner.close(); }
+  function closeModal()  { if (overlay.open) overlay.close(); }
 
   function openModal() {
     const consent = getConsent();
     analyticsToggle.checked = consent ? Boolean(consent.analytics) : false;
-    overlay.hidden = false;
-    // Move focus into modal for accessibility
-    overlay.querySelector('.cookie-modal').setAttribute('tabindex', '-1');
-    overlay.querySelector('.cookie-modal').focus();
+    overlay.showModal();
   }
 
   // ─── Boot: show banner if no valid consent on record ──────────
   const existing = getConsent();
   if (!existing || existing.version !== CONSENT_VERSION) {
-    banner.hidden = false;
+    banner.show(); // non-modal — doesn't trap focus like showModal()
   } else if (existing.analytics) {
     loadGA(); // re-hydrate GA on return visits that previously accepted
   }
@@ -103,8 +100,9 @@
     if (e.target === overlay) closeModal();
   });
 
-  // Close on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !overlay.hidden) closeModal();
+  // <dialog> fires 'cancel' on Escape — just close cleanly
+  overlay.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    closeModal();
   });
 })();

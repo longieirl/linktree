@@ -32,7 +32,7 @@
     <!-- Profile -->
     <section class="profile">
       <div class="avatar-wrap">
-        <img class="avatar" src="avatar.jpg" alt="longieirl profile photo" width="96" height="96" decoding="async" />
+        <img class="avatar" src="avatar.jpg" alt="longieirl profile" width="96" height="96" decoding="async" />
         <div class="avatar-ring"></div>
       </div>
       <h1 class="name">@longieirl</h1>
@@ -131,13 +131,13 @@
       <nav class="footer-links" aria-label="Footer links">
         <button class="footer-link" id="cookie-prefs-btn" aria-label="Cookie Preferences">Cookie Preferences</button>
         <a class="footer-link" href="privacy.html">Privacy</a>
-        <a class="footer-link" href="mailto:report@example.com?subject=Report%20Profile">Report</a>
+        <a class="footer-link" href="mailto:jlongieirl+privacy@gmail.com?subject=Report%20Profile">Report</a>
       </nav>
     </footer>
   </main>
 
   <!-- Cookie Banner -->
-  <div class="cookie-banner" id="cookie-banner" role="dialog" aria-label="Cookie consent" aria-live="polite" hidden>
+  <dialog class="cookie-banner" id="cookie-banner" aria-label="Cookie consent" aria-live="polite">
     <div class="cookie-banner-body">
       <p class="cookie-text">
         We'd like to use <strong>Google Analytics</strong> to understand how visitors use this site.
@@ -150,14 +150,14 @@
         <button class="cookie-btn cookie-btn--primary" id="cookie-accept">Accept Analytics</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <!-- Cookie Preferences Modal -->
-  <div class="cookie-modal-overlay" id="cookie-modal-overlay" role="dialog" aria-modal="true" aria-label="Cookie Preferences" hidden>
+  <dialog class="cookie-modal-overlay" id="cookie-modal-overlay" aria-label="Cookie Preferences">
     <div class="cookie-modal">
       <h2 class="cookie-modal-title">Cookie Preferences</h2>
       <p class="cookie-modal-desc">Manage your cookie settings below.</p>
-      <ul class="cookie-categories" role="list">
+      <ul class="cookie-categories">
         <li class="cookie-category">
           <div class="cookie-category-info">
             <span class="cookie-category-name">Essential</span>
@@ -181,7 +181,7 @@
         <button class="cookie-btn cookie-btn--primary" id="cookie-modal-save">Save Preferences</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <script src="script.js"></script>
   <script src="cookies.js"></script>

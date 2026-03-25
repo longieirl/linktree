@@ -466,9 +466,13 @@ body::before {
   z-index: 100;
   box-shadow: 0 8px 40px rgba(0,0,0,0.6);
   animation: slide-up-banner 0.3s ease both;
+  /* Reset <dialog> defaults */
+  margin: 0;
+  color: inherit;
+  top: auto;
 }
 
-.cookie-banner[hidden] { display: none; }
+.cookie-banner:not([open]) { display: none; }
 
 .cookie-banner-body {
   display: flex;
@@ -567,9 +571,20 @@ body::before {
   align-items: center;
   justify-content: center;
   padding: 20px;
+  /* Reset <dialog> defaults */
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border: none;
+  color: inherit;
 }
 
-.cookie-modal-overlay[hidden] { display: none; }
+.cookie-modal-overlay:not([open]) { display: none; }
+
+.cookie-modal-overlay::backdrop {
+  background: transparent; /* we paint our own overlay background above */
+}
 
 .cookie-modal {
   background: #141412;
