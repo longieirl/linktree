@@ -52,7 +52,7 @@
 
   function openModal() {
     const consent = getConsent();
-    analyticsToggle.checked = consent ? Boolean(consent.analytics) : false;
+    analyticsToggle.checked = consent ? Boolean(consent.analytics) : true;
     overlay.showModal();
   }
 
@@ -93,16 +93,24 @@
     closeBanner();
   });
 
-  document.getElementById('cookie-modal-close').addEventListener('click', closeModal);
-
-  // Close on overlay backdrop click
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeModal();
+  document.getElementById('cookie-modal-close').addEventListener('click', () => {
+    // If no consent on record yet, treat Cancel as Reject so banner doesn't re-prompt
+    if (!getConsent()) saveConsent(false, 'reject_all');
+    closeModal();
   });
 
-  // <dialog> fires 'cancel' on Escape — just close cleanly
+  // Close on overlay backdrop click — same: persist a rejection if nothing saved yet
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      if (!getConsent()) saveConsent(false, 'reject_all');
+      closeModal();
+    }
+  });
+
+  // <dialog> fires 'cancel' on Escape — persist rejection and close cleanly
   overlay.addEventListener('cancel', (e) => {
     e.preventDefault();
+    if (!getConsent()) saveConsent(false, 'reject_all');
     closeModal();
   });
 })();
